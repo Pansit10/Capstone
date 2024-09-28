@@ -7,7 +7,8 @@ import LoginScreen from './screens/LoginScreen'; // Adjust the path as needed
 import SplashScreen from './screens/SplashScreen'; // Adjust the path as needed if you're using a splash screen
 import SignUp from './screens/SignUp'; 
 import VerificationScreen from './screens/VerificationScreen';  // Adjust path as needed
-import HomePage from './screens/HomePage'
+import HomePage from './screens/HomePage';
+import Appointment from './screens/Appointment';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ function App() {
         <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />      
         <Stack.Screen name="VerificationScreen" component={VerificationScreen} options={{ headerShown: false }} />
         <Stack.Screen name="HomePage" component={HomePage} options={{ headerShown: false }} />
+        <Stack.Screen name="Appointment" component={Appointment} options={{ headerShown: false }} />
       
       </Stack.Navigator>
     </NavigationContainer>
