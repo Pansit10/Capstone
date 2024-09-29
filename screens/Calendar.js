@@ -2,27 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { CalendarList } from 'react-native-calendars';
 
-const appointments = [
-  { label: 'Wedding', image: require('../image/image4.png'), screen: 'Wedding' },
-  { label: 'Baptism', image: require('../image/image5.png'), screen: 'Baptism' },
-  { label: 'Prayer Intention', image: require('../image/image6.png'), screen: 'PrayerIntention' }, 
-  { label: 'Funeral Mass', image: require('../image/image7.png'), screen: 'FuneralMass' },
-  { label: 'House Blessing', image: require('../image/image8.png'), screen: 'HouseBlessing' },
-  { label: 'Request for Baptismal and Kumpil Certificate', image: require('../image/image9.png'), screen: 'RequestCertificate' },
-  { label: 'First Communion', image: require('../image/image10.png'), screen: 'FirstCommunion' },
-  { label: 'Kumpil', image: require('../image/image11.png'), screen: 'Kumpil' },
-  { label: 'Special Mass', image: require('../image/image12.png'), screen: 'SpecialMass' },
-];
-
-const Appointment = () => {
+const Calendar = () => {
   const navigation = useNavigation();
-  const route = useRoute();  // Get the current route
+  const route = useRoute(); // Get the current route
   const [activeTab, setActiveTab] = useState(route.name); // Set active tab based on current route
+  const [selectedDate, setSelectedDate] = useState(''); // Track selected date
+  const [currentDate, setCurrentDate] = useState(''); // Track current date
+
+  // Function to get today's date
+  const getToday = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Ensure 2 digits for month
+    const day = today.getDate().toString().padStart(2, '0'); // Ensure 2 digits for day
+    return `${year}-${month}-${day}`; // Format the date as 'YYYY-MM-DD'
+  };
 
   useEffect(() => {
-    setActiveTab(route.name); // Update activeTab when the route changes
-  }, [route.name]);
+    const today = getToday();
+    setCurrentDate(today); // Set the current date when component mounts
+  }, []);
 
   const handleNavigate = (screen) => {
     setActiveTab(screen); // Update active tab state
@@ -34,33 +35,30 @@ const Appointment = () => {
       {/* Header Section */}
       <View style={styles.header}>
         <Image
-          source={require('../image/logo.png')} 
+          source={require('../image/logo.png')} // Adjust your path accordingly
           style={styles.logo}
         />
-        <View style={styles.icons}>
-          <Ionicons name="notifications-outline" size={24} color="black" />
-          <Ionicons name="person-circle-outline" size={24} color="black" />
-        </View>
+        <Text style={styles.headerTitle}>Calendar</Text>
+        <Ionicons name="person-circle-outline" size={24} color="black" />
       </View>
 
-      {/* Content Section */}
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.title}>Appointment and Request</Text>
-        </View>
-
-        {/* Appointment Items */}
-        {appointments.map((item, index) => (
-          <TouchableOpacity 
-            key={index} 
-            style={styles.card} 
-            onPress={() => handleNavigate(item.screen)} // Navigate to respective page
-          >
-            <Image source={item.image} style={styles.cardImage} />
-            <Text style={styles.cardText}>{item.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      {/* Content Section (Calendar Scrollable Content) */}
+      <View style={styles.calendarContainer}>
+        <CalendarList
+          // Show a scrollable list of months
+          onDayPress={(day) => {
+            setSelectedDate(day.dateString); // Set the selected date
+          }}
+          markedDates={{
+            [selectedDate]: { selected: true, selectedColor: '#C69C6D' }, // Mark selected date
+            [currentDate]: { marked: true, dotColor: '#00adf5', selected: true, selectedColor: '#f0a500' }, // Highlight today's date
+          }}
+          pastScrollRange={12} // Show 12 months before the current month
+          futureScrollRange={12} // Show 12 months after the current month
+          scrollEnabled={true} // Allow scrolling through months
+          showScrollIndicator={true} // Show scroll indicator
+        />
+      </View>
 
       {/* Fixed Navbar Section */}
       <View style={styles.navbar}>
@@ -102,40 +100,14 @@ const styles = StyleSheet.create({
     height: 40,
     resizeMode: 'contain',
   },
-  icons: {
-    flexDirection: 'row',
-    width: 70,
-    justifyContent: 'space-between',
-  },
-  scrollContainer: {
-    paddingBottom: 80,
-  },
-  headerTitleContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  title: {
-    fontSize: 24,
+  headerTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#666',
   },
-  card: {
-    backgroundColor: '#EBD7BF',
-    borderRadius: 10,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    overflow: 'hidden',
-  },
-  cardImage: {
-    width: '100%',
-    height: 150,
-    resizeMode: 'cover',
-  },
-  cardText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    paddingVertical: 10,
-    backgroundColor: '#EBD7BF',
+  calendarContainer: {
+    flex: 1,
+    padding: 10,
   },
   navbar: {
     position: 'absolute',
@@ -166,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Appointment;
+export default Calendar;
