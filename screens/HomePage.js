@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, SafeAreaView, TouchableOpaci
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import Header from '../components/Header';
 
 const HomePage = () => {
   const navigation = useNavigation();
@@ -21,16 +22,7 @@ const HomePage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.header}>
-          <Image
-            source={require('../image/logo.png')}
-            style={styles.logo}
-          />
-          <View style={styles.icons}>
-            <Ionicons name="notifications-outline" size={24} color="black" />
-            <Ionicons name="person-circle-outline" size={24} color="black" />
-          </View>
-        </View>
+        <Header />
 
         <Text style={styles.welcomeText}>
           Welcome to Blessed Virgin Mary, Queen of The World Parish
@@ -128,23 +120,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     paddingBottom: 80,
     paddingHorizontal: 10,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#f7f7f7',
-  },
-  logo: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
-  },
-  icons: {
-    flexDirection: 'row',
-    width: 70,
-    justifyContent: 'space-between',
   },
   welcomeText: {
     textAlign: 'center',
@@ -294,6 +269,5 @@ const styles = StyleSheet.create({
     borderBottomColor: '#C69C6D',
   },
 });
-
 
 export default HomePage;
