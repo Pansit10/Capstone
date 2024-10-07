@@ -9,6 +9,20 @@ const BottomNavbar = () => {
   const route = useRoute();
   const activeTab = route.name;
 
+  // Check if the current screen belongs to the appointment group
+  const isAppointmentRelated = [
+    'Appointment',
+    'Baptism',
+    'Wedding',
+    'PrayerIntention',
+    'FuneralMass',
+    'HouseBlessing',
+    'RequestCertificate',
+    'FirstCommunion',
+    'Kumpil',
+    'SpecialMass',
+  ].includes(activeTab);
+
   const handleNavigate = (screen) => {
     navigation.navigate(screen);
   };
@@ -22,10 +36,23 @@ const BottomNavbar = () => {
         { name: 'Menu', label: 'Menu', icon: 'menu-outline' },
       ].map((tab) => (
         <TouchableOpacity key={tab.name} style={styles.navItem} onPress={() => handleNavigate(tab.name)}>
-          <View style={[styles.navIcon, activeTab === tab.name && styles.activeNavIcon]}>
-            <Ionicons name={tab.icon} size={24} color={activeTab === tab.name ? '#fff' : '#666'} />
-          </View>
-          <Text style={[styles.navText, activeTab === tab.name && styles.activeTab]}>{tab.label}</Text>
+          <Ionicons
+            name={tab.icon}
+            size={24}
+            color={
+              (tab.name === 'Appointment' && isAppointmentRelated) || activeTab === tab.name
+                ? '#6A5D43'
+                : '#666'
+            }
+          />
+          <Text
+            style={[
+              styles.navText,
+              ((tab.name === 'Appointment' && isAppointmentRelated) || activeTab === tab.name) && styles.activeTab,
+            ]}
+          >
+            {tab.label}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -49,14 +76,6 @@ const styles = StyleSheet.create({
   navItem: {
     alignItems: 'center',
     flex: 1,
-  },
-  navIcon: {
-    backgroundColor: '#E0E0E0',
-    borderRadius: 50,
-    padding: 10,
-  },
-  activeNavIcon: {
-    backgroundColor: '#C69C6D',
   },
   navText: {
     fontSize: 14,

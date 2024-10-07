@@ -1,25 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // For icons
+import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, ScrollView, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import BottomNavbar from '../components/BottomNavbar';
 
 const RequestCertificate = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
-      {/* Header Section */}
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <Image
-            source={require('../image/logo.png')}  // Logo path
-            style={styles.logo}
-          />
-          <View style={styles.icons}>
-            <Ionicons name="notifications-outline" size={24} color="black" />
-            <Ionicons name="person-circle-outline" size={24} color="black" />
-          </View>
-        </View>
+    <SafeAreaView style={styles.container}>
+      {/* Navigation Header with Back Button */}
+      <View style={styles.navigationHeader}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#6A5D43" />
+        </TouchableOpacity>
+        <Text style={styles.navigationTitle}>Request Certificate</Text>
       </View>
 
       {/* Content Section */}
@@ -28,27 +23,21 @@ const RequestCertificate = () => {
 
         <Text style={styles.requirementsTitle}>Requirements for Baptismal and Kumpil Certificate</Text>
         
+        {/* Baptismal Section */}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Baptismal</Text>
           <View style={styles.requirementsList}>
-            <Text style={styles.requirementItem}>
-              • Name of the Baptized
-            </Text>
-            <Text style={styles.requirementItem}>
-              • Date of Baptized
-            </Text>
+            <Text style={styles.requirementItem}>• Name of the Baptized</Text>
+            <Text style={styles.requirementItem}>• Date of Baptized</Text>
           </View>
         </View>
 
+        {/* Kumpil Section */}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Kumpil</Text>
           <View style={styles.requirementsList}>
-            <Text style={styles.requirementItem}>
-              • Baptismal Certificate
-            </Text>
-            <Text style={styles.requirementItem}>
-              • Birth Certificate
-            </Text>
+            <Text style={styles.requirementItem}>• Baptismal Certificate</Text>
+            <Text style={styles.requirementItem}>• Birth Certificate</Text>
           </View>
         </View>
 
@@ -57,26 +46,9 @@ const RequestCertificate = () => {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Fixed Navbar Section */}
-      <View style={styles.navbar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('HomePage')}>
-          <Ionicons name="home-outline" size={24} color="#666" />
-          <Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Appointment')}>
-          <Ionicons name="add-circle-outline" size={24} color="#666" />
-          <Text style={styles.navText}>Appointment</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Calendar')}>
-          <Ionicons name="calendar-outline" size={24} color="#666" />
-          <Text style={styles.navText}>Calendar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Menu')}>
-          <Ionicons name="menu-outline" size={24} color="#666" />
-          <Text style={styles.navText}>Menu</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      {/* Bottom Navbar */}
+      <BottomNavbar />
+    </SafeAreaView>
   );
 };
 
@@ -85,25 +57,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  headerContainer: {
-    backgroundColor: '#f7f7f7',
-    paddingVertical: 10,
-  },
-  header: {
+  navigationHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
+    paddingVertical: 15,
+    backgroundColor: '#F7F7F7',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
   },
-  logo: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
+  backButton: {
+    marginRight: 10,
   },
-  icons: {
-    flexDirection: 'row',
-    width: 70,
-    justifyContent: 'space-between',
+  navigationTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#6A5D43',
   },
   content: {
     paddingHorizontal: 20,
@@ -124,8 +93,8 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   section: {
-    backgroundColor: '#FDF3E7',  // Subtle background color for better presentation
-    padding: 10, // Reduced padding to avoid too much space around text
+    backgroundColor: '#FDF3E7',
+    padding: 15,
     borderRadius: 10,
     marginBottom: 20,
   },
@@ -133,6 +102,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#6A5D43',
   },
   requirementsList: {
     paddingHorizontal: 10,
@@ -140,41 +110,20 @@ const styles = StyleSheet.create({
   requirementItem: {
     fontSize: 16,
     color: '#333',
-    lineHeight: 28, // Increased line height for more spacing
-    marginBottom: 10, // Added margin at the bottom of each item
+    lineHeight: 28,
+    marginBottom: 10,
   },
-
   appointmentButton: {
     backgroundColor: '#C69C6D',
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: 'center',
-    marginBottom: 50, // Ensures it does not overlap with the navbar
+    marginBottom: 50,
   },
   appointmentButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  navbar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#EBD7BF',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-  },
-  navItem: {
-    alignItems: 'center',
-  },
-  navText: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 5,
   },
 });
 
