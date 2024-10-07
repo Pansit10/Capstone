@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // For icons
 import { useNavigation, useRoute } from '@react-navigation/native';
+import BottomNavbar from '../components/BottomNavbar';
+import Header from '../components/Header';
 
 const Menu = () => {
   const navigation = useNavigation();
@@ -16,18 +18,7 @@ const Menu = () => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header Section */}
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <Image
-            source={require('../image/logo.png')}  // Logo path
-            style={styles.logo}
-          />
-          <View style={styles.icons}>
-            <Ionicons name="notifications-outline" size={24} color="black" />
-            <Ionicons name="person-circle-outline" size={24} color="black" />
-          </View>
-        </View>
-      </View>
+      <Header />
 
       {/* Content Section */}
       <View style={styles.content}>
@@ -56,25 +47,8 @@ const Menu = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Fixed Navbar Section */}
-      <View style={styles.navbar}>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleNavigate('HomePage')}>
-          <Ionicons name="home-outline" size={24} color="#666" />
-          <Text style={[styles.navText, activeTab === 'HomePage' && styles.activeTab]}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleNavigate('Appointment')}>
-          <Ionicons name="add-circle-outline" size={24} color="#666" />
-          <Text style={[styles.navText, activeTab === 'Appointment' && styles.activeTab]}>Appointment</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleNavigate('Calendar')}>
-          <Ionicons name="calendar-outline" size={24} color="#666" />
-          <Text style={[styles.navText, activeTab === 'Calendar' && styles.activeTab]}>Calendar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleNavigate('Menu')}>
-          <Ionicons name="menu-outline" size={24} color="#666" />
-          <Text style={[styles.navText, activeTab === 'Menu' && styles.activeTab]}>Menu</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Bottom Navbar */}
+      <BottomNavbar />
     </SafeAreaView>
   );
 };

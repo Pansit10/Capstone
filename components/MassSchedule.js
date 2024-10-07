@@ -28,26 +28,33 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   massScheduleContainer: {
-    padding: 20,
-    backgroundColor: '#EBD7BF',
+    padding: 25,
+    backgroundColor: '#F3F3F3',
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 25,
+    elevation: 13,
+    borderWidth: 0,
+    borderColor: '#EBEBEB', 
   },
+  
   massScheduleHeader: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#6A5D43',
     marginBottom: 10,
   },
   scheduleContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: 10,
   },
   scheduleText: {
     fontSize: 16,
-    lineHeight: 24,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 5,
+    lineHeight: 26,
+    color: '#4A4A4A',
+    textAlign: 'left',
+    marginBottom: 8,
+    paddingLeft: 5,
   },
 });
 

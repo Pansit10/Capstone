@@ -6,8 +6,8 @@ const Header = () => (
   <View style={styles.header}>
     <Image source={require('../image/logo.png')} style={styles.logo} />
     <View style={styles.icons}>
-      <Ionicons name="notifications-outline" size={24} color="black" />
-      <Ionicons name="person-circle-outline" size={24} color="black" />
+      <Ionicons name="notifications-outline" size={28} color="#6A5D43" />
+      <Ionicons name="person-circle-outline" size={28} color="#6A5D43" />
     </View>
   </View>
 );
@@ -17,16 +17,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF',
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
   },
   icons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 60,
+    width: 70,
   },
 });
 

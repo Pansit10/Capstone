@@ -17,28 +17,30 @@ const About = () => (
 const styles = StyleSheet.create({
   aboutImage: {
     width: '100%',
-    height: 200,
+    height: 220,
     resizeMode: 'cover',
     marginBottom: 20,
     borderRadius: 10,
   },
   aboutContainer: {
-    padding: 20,
-    backgroundColor: '#EBD7BF',
+    padding: 25,
+    backgroundColor: '#F3F3F3',
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 25,
+    elevation: 13,
   },
   sectionHeader: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
+    color: '#6A5D43',
+    marginBottom: 15,
   },
   aboutText: {
     fontSize: 16,
-    lineHeight: 24,
-    color: '#666',
-    textAlign: 'center',
+    lineHeight: 26,
+    color: '#4A4A4A',
+    textAlign: 'justify',
   },
 });
 
