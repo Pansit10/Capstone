@@ -14,6 +14,7 @@ const About = () => (
   </View>
 );
 
+
 const styles = StyleSheet.create({
   aboutImage: {
     width: '100%',
