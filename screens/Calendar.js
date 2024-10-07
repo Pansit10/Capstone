@@ -1,35 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { CalendarList } from 'react-native-calendars';
 import BottomNavbar from '../components/BottomNavbar';
 import Header from '../components/Header';
 
-const Calendar = () => {
-  const navigation = useNavigation();
-  const route = useRoute(); // Get the current route
-  const [activeTab, setActiveTab] = useState(route.name); // Set active tab based on current route
+const CalendarScreen = () => {
   const [selectedDate, setSelectedDate] = useState(''); // Track selected date
-  const [currentDate, setCurrentDate] = useState(''); // Track current date
+  const [currentMonth, setCurrentMonth] = useState(new Date()); // Track current month as a Date object
+  const [appointments, setAppointments] = useState({}); // Hold user appointments
+  const [selectedAppointments, setSelectedAppointments] = useState([]); // Appointments for the selected date
 
   // Function to get today's date
   const getToday = () => {
     const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Ensure 2 digits for month
-    const day = today.getDate().toString().padStart(2, '0'); // Ensure 2 digits for day
-    return `${year}-${month}-${day}`; // Format the date as 'YYYY-MM-DD'
+    return today.toISOString().split('T')[0]; // Format the date as 'YYYY-MM-DD'
+  };
+
+  // Mock function to fetch user appointments
+  const fetchAppointments = () => {
+    return {
+      '2024-10-10': [{ title: 'Baptism Appointment', time: '10:00 AM' }],
+      '2024-10-12': [{ title: 'Wedding Appointment', time: '2:00 PM' }, { title: 'Special Mass', time: '4:00 PM' }],
+      '2024-11-15': [{ title: 'House Blessing', time: '11:00 AM' }],
+    };
   };
 
   useEffect(() => {
     const today = getToday();
-    setCurrentDate(today); // Set the current date when component mounts
+    setSelectedDate(today); // Set the initial selected date
+
+    // Fetch user appointments and set them
+    const userAppointments = fetchAppointments();
+    setAppointments(userAppointments);
   }, []);
 
-  const handleNavigate = (screen) => {
-    setActiveTab(screen); // Update active tab state
-    navigation.navigate(screen); // Navigate to the respective screen
+  // Function to handle when a day is pressed
+  const handleDayPress = (day) => {
+    setSelectedDate(day.dateString); // Set the selected date
+    setSelectedAppointments(appointments[day.dateString] || []); // Update selectedAppointments with the appointments for the selected date
+  };
+
+  // Function to change the current month
+  const changeMonth = (direction) => {
+    let newMonth = new Date(currentMonth);
+    if (direction === 'next') {
+      newMonth.setMonth(newMonth.getMonth() + 1);
+    } else {
+      newMonth.setMonth(newMonth.getMonth() - 1);
+    }
+    setCurrentMonth(newMonth);
   };
 
   return (
@@ -37,23 +57,57 @@ const Calendar = () => {
       {/* Header Section */}
       <Header />
 
-      {/* Content Section (Calendar Scrollable Content) */}
+      {/* Calendar Header with Month Navigation */}
+      <View style={styles.monthNavigation}>
+        <TouchableOpacity onPress={() => changeMonth('prev')}>
+          <Ionicons name="chevron-back-outline" size={30} color="#6A5D43" />
+        </TouchableOpacity>
+        <Text style={styles.monthText}>
+          {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
+        </Text>
+        <TouchableOpacity onPress={() => changeMonth('next')}>
+          <Ionicons name="chevron-forward-outline" size={30} color="#6A5D43" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Calendar Section */}
       <View style={styles.calendarContainer}>
-        <CalendarList
-          // Show a scrollable list of months
-          onDayPress={(day) => {
-            setSelectedDate(day.dateString); // Set the selected date
-          }}
+        <Calendar
+          key={currentMonth.toString()} // This forces the calendar to re-render when the month changes
+          current={currentMonth.toISOString().split('T')[0]} // Set current month
+          onDayPress={handleDayPress}
           markedDates={{
-            [selectedDate]: { selected: true, selectedColor: '#C69C6D' }, // Mark selected date
-            [currentDate]: { marked: true, dotColor: '#00adf5', selected: true, selectedColor: '#f0a500' }, // Highlight today's date
+            [selectedDate]: { selected: true, selectedColor: '#C69C6D' },
+            [getToday()]: { marked: true, dotColor: '#00adf5', selected: selectedDate === getToday(), selectedColor: '#f0a500' },
+            ...Object.keys(appointments).reduce((acc, date) => {
+              acc[date] = { marked: true, dotColor: '#C69C6D' };
+              return acc;
+            }, {}),
           }}
-          pastScrollRange={12} // Show 12 months before the current month
-          futureScrollRange={12} // Show 12 months after the current month
-          scrollEnabled={true} // Allow scrolling through months
-          showScrollIndicator={true} // Show scroll indicator
+          hideArrows={true} // Hide the default arrows
+          hideExtraDays={true} // Hide extra days from other months
+          disableMonthChange={true} // Prevent default month change behavior
         />
       </View>
+
+      {/* Appointment Details Section */}
+      <ScrollView contentContainerStyle={styles.detailsContainer}>
+        <Text style={styles.detailsTitle}>
+          Appointments on {selectedDate || 'Select a date'}
+        </Text>
+        {selectedAppointments.length > 0 ? (
+          selectedAppointments.map((appointment, index) => (
+            <View key={index} style={styles.appointmentCard}>
+              <Text style={styles.appointmentTitle}>{appointment.title}</Text>
+              <Text style={styles.appointmentTime}>{appointment.time}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noAppointmentsText}>
+            {selectedDate ? 'No appointments on this date' : 'Please select a date'}
+          </Text>
+        )}
+      </ScrollView>
 
       {/* Bottom Navbar */}
       <BottomNavbar />
@@ -66,54 +120,56 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
+  monthNavigation: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#f7f7f7',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#F7F7F7',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
   },
-  logo: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
-  },
-  headerTitle: {
+  monthText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#666',
+    color: '#6A5D43',
   },
   calendarContainer: {
-    flex: 1,
     padding: 10,
   },
-  navbar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#EBD7BF',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
+  detailsContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
   },
-  navItem: {
-    alignItems: 'center',
+  detailsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#6A5D43',
   },
-  navText: {
-    fontSize: 12,
+  appointmentCard: {
+    backgroundColor: '#FDF3E7',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  appointmentTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  appointmentTime: {
+    fontSize: 14,
     color: '#666',
     marginTop: 5,
   },
-  activeTab: {
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
-    color: '#6A5D43',
-    borderBottomWidth: 3,
-    borderBottomColor: '#C69C6D',
+  noAppointmentsText: {
+    fontSize: 16,
+    color: '#999',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
-export default Calendar;
+export default CalendarScreen;
