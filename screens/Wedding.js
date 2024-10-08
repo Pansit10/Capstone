@@ -7,6 +7,11 @@ import BottomNavbar from '../components/BottomNavbar';
 const Wedding = () => {
   const navigation = useNavigation();
 
+  // Navigate to the Appointment Booking Screen
+  const handleAppointmentNavigation = () => {
+    navigation.navigate('AppointmentBooking');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Navigation Header with Back Button */}
@@ -47,7 +52,7 @@ const Wedding = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.appointmentButton}>
+        <TouchableOpacity style={styles.appointmentButton} onPress={handleAppointmentNavigation}>
           <Text style={styles.appointmentButtonText}>Make an Appointment</Text>
         </TouchableOpacity>
       </ScrollView>
