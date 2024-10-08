@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import axios from 'axios'; 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_BASE_URL } from '@env';
-
 
 const SignUp = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
@@ -12,8 +8,8 @@ const SignUp = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false); // To show a loading state
 
-  // Function to handle user registration
-  const handleRegister = async () => {
+  // Static function to handle user registration
+  const handleRegister = () => {
     if (password !== confirmPassword) {
       alert('Passwords do not match');
       return;
@@ -21,27 +17,12 @@ const SignUp = ({ navigation }) => {
 
     setLoading(true); // Start loading
 
-    try {
-      const response = await axios.post(`${API_BASE_URL}/auth/register`, {
-        fullName,
-        email,
-        password,
-      });
-
-      if (response.data.token) {
-        alert('Registration successful. Please log in.');
-        
-        // Navigate to the login page, passing the registered email
-        navigation.navigate('LoginScreen', { registeredEmail: email });
-      } else {
-        alert(response.data.msg || 'Registration failed, please try again.');
-      }
-    } catch (error) {
-      console.error('Sign Up Error:', error.response ? error.response.data : error.message);
-      alert('An error occurred during sign-up. Please try again.');
-    } finally {
-      setLoading(false); // Stop loading
-    }
+    setTimeout(() => {
+      alert('Registration successful. Please log in.');
+      setLoading(false);
+      // Navigate to the login page, passing the registered email
+      navigation.navigate('LoginScreen', { registeredEmail: email });
+    }, 2000); // Simulate a delay for registration
   };
 
   return (
@@ -115,11 +96,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
     alignItems: 'center',
   },
   headerText: {
@@ -135,12 +111,10 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#fff',
   },
   button: {
     backgroundColor: '#C39269',
     paddingVertical: 10,
-    paddingHorizontal: 20,
     borderRadius: 20,
     width: '100%',
     alignItems: 'center',
@@ -155,7 +129,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    marginBottom: 20,
   },
   socialIcon: {
     width: 40,
@@ -167,7 +140,6 @@ const styles = StyleSheet.create({
   },
   registerText: {
     fontSize: 16,
-    color: '#000',
     textAlign: 'center',
   },
   loginLink: {

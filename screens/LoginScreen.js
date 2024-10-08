@@ -1,58 +1,27 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_BASE_URL } from '@env';
-
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [loading, setLoading] = useState(false); // To manage loading state
+  const [loading, setLoading] = useState(false);
 
-  // Function to handle user login
-  const handleLogin = async () => {
+  // Static function to handle user login
+  const handleLogin = () => {
     if (!email || !password) {
       alert('Please enter both email and password.');
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
 
-    try {
-      // Make an API request to log in
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-        email,
-        password,
-      });
-
-      // If login is successful
-      if (response.data.token) {
-        await AsyncStorage.setItem('token', response.data.token);
-        await AsyncStorage.setItem('fullName', response.data.user.fullName); // Storing fullName
-        await AsyncStorage.setItem('email', response.data.user.email);
-
-        setLoading(false);
-        alert('Login successful');
-        navigation.navigate('HomePage'); // Navigate to homepage after successful login
-      } else {
-        setLoading(false);
-        alert(response.data.msg || 'Login failed, please check your credentials.');
-      }
-    } catch (error) {
+    setTimeout(() => {
       setLoading(false);
-      // Error handling for network and server issues
-      if (error.response) {
-        alert(`Login failed: ${error.response.data.message || 'Server error'}`);
-      } else if (error.request) {
-        alert('No response from server. Please check your connection.');
-      } else {
-        alert('Login error. Please try again.');
-      }
-      console.error('Login Error:', error);
-    }
+      alert('Login successful');
+      navigation.navigate('HomePage'); // Navigate to homepage after static login
+    }, 2000); // Simulate a delay for login
   };
 
   return (
@@ -101,16 +70,10 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.socialMediaLabel}>or sign in with</Text>
         <View style={styles.socialMediaContainer}>
           <TouchableOpacity>
-            <Image
-              source={require('../image/facebook.png')}
-              style={styles.socialIcon}
-            />
+            <Image source={require('../image/facebook.png')} style={styles.socialIcon} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Image
-              source={require('../image/google.png')}
-              style={styles.socialIcon}
-            />
+            <Image source={require('../image/google.png')} style={styles.socialIcon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -136,21 +99,17 @@ const styles = StyleSheet.create({
     padding: 25,
     borderRadius: 20,
     alignItems: 'center',
-    borderWidth: 0,
-    borderColor: '#e0e0e0',
   },
   headerText: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#6A5D43',
-    fontFamily: 'DMSans_700Bold',
   },
   subHeaderText: {
     fontSize: 16,
     color: '#6A5D43',
     marginBottom: 30,
-    fontFamily: 'DMSans_400Regular',
   },
   input: {
     width: '100%',
@@ -160,10 +119,6 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#fff',
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 16,
-    color: '#4A4A4A',
   },
   rememberMeContainer: {
     alignItems: 'flex-start',
@@ -173,7 +128,6 @@ const styles = StyleSheet.create({
   rememberMeText: {
     fontSize: 16,
     color: '#4A4A4A',
-    fontFamily: 'DMSans_400Regular',
   },
   button: {
     backgroundColor: '#C39269',
@@ -187,13 +141,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-    fontFamily: 'DMSans_700Bold',
   },
   socialMediaLabel: {
     fontSize: 16,
     marginBottom: 15,
     color: '#6A5D43',
-    fontFamily: 'DMSans_500Medium',
   },
   socialMediaContainer: {
     flexDirection: 'row',
@@ -213,8 +165,6 @@ const styles = StyleSheet.create({
   registerText: {
     fontSize: 16,
     color: '#4A4A4A',
-    textAlign: 'center',
-    fontFamily: 'DMSans_400Regular',
   },
   registerLink: {
     color: '#C39269',
