@@ -1,18 +1,81 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // For icons
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // For storing user data
 import BottomNavbar from '../components/BottomNavbar';
 import Header from '../components/Header';
+import * as ImagePicker from 'expo-image-picker'; // Image picker for profile picture
 
 const Menu = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const [activeTab, setActiveTab] = useState(route.name);
+  const [userInfo, setUserInfo] = useState({
+    fullName: '',
+    email: '',
+    profileImage: require('../image/profile.png'), // Default profile image
+  });
 
-  const handleNavigate = (screen) => {
-    setActiveTab(screen);
-    navigation.navigate(screen);
+  // Load user information from AsyncStorage
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      try {
+        const storedName = await AsyncStorage.getItem('fullName');
+        const storedEmail = await AsyncStorage.getItem('email');
+        const storedProfileImage = await AsyncStorage.getItem('profileImage'); // Profile image URI
+
+        setUserInfo({
+          fullName: storedName || 'User',
+          email: storedEmail || 'user@example.com',
+          profileImage: storedProfileImage ? { uri: storedProfileImage } : require('../image/profile.png'),
+        });
+      } catch (error) {
+        console.error('Error loading user info from AsyncStorage', error);
+      }
+    };
+
+    loadUserInfo();
+  }, []);
+
+  // Function to handle profile image update
+  const handleProfileImageChange = async () => {
+    // Ask for permission to access gallery
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert('Permission to access gallery is required!');
+      return;
+    }
+
+    // Open image picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      try {
+        // Save selected image URI to AsyncStorage and update UI
+        await AsyncStorage.setItem('profileImage', result.uri);
+        setUserInfo((prev) => ({ ...prev, profileImage: { uri: result.uri } }));
+        Alert.alert('Profile image updated successfully!');
+      } catch (error) {
+        console.error('Error saving profile image', error);
+      }
+    }
+  };
+
+  // Handle Sign-Out
+  const handleSignOut = async () => {
+    try {
+      await AsyncStorage.clear();
+      navigation.navigate('LoginScreen');
+    } catch (error) {
+      console.error('Error clearing AsyncStorage:', error);
+    }
   };
 
   return (
@@ -22,26 +85,28 @@ const Menu = () => {
 
       {/* Content Section */}
       <View style={styles.content}>
-        <Image source={require('../image/profile.png')} style={styles.profileImage} />
-        <Text style={styles.profileName}>Francis Gabriel Flancia</Text>
-        <Text style={styles.profileEmail}>flanciafrancis03@gmail.com</Text>
+        <TouchableOpacity onPress={handleProfileImageChange}>
+          <Image source={userInfo.profileImage} style={styles.profileImage} />
+        </TouchableOpacity>
+        <Text style={styles.profileName}>{userInfo.fullName}</Text>
+        <Text style={styles.profileEmail}>{userInfo.email}</Text>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Messaging Admin...')}>
           <Ionicons name="chatbubble-outline" size={24} color="#666" />
           <Text style={styles.menuText}>Message Admin</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleProfileImageChange}>
           <Ionicons name="person-outline" size={24} color="#666" />
-          <Text style={styles.menuText}>Edit Profile</Text>
+          <Text style={styles.menuText}>Change Profile Picture</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Generating Certificate...')}>
           <Ionicons name="document-outline" size={24} color="#666" />
           <Text style={styles.menuText}>Generate Certificate</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.signOutButton}>
+        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
           <Ionicons name="log-out-outline" size={24} color="#666" />
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
@@ -57,26 +122,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  headerContainer: {
-    backgroundColor: '#f7f7f7',
-    paddingVertical: 10,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-  logo: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
-  },
-  icons: {
-    flexDirection: 'row',
-    width: 70,
-    justifyContent: 'space-between',
   },
   content: {
     alignItems: 'center',
@@ -122,33 +167,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     marginLeft: 10,
-  },
-  navbar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#EBD7BF',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-  },
-  navItem: {
-    alignItems: 'center',
-  },
-  navText: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 5,
-  },
-  activeTab: {
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
-    color: '#6A5D43',
-    borderBottomWidth: 3,
-    borderBottomColor: '#C69C6D',
   },
 });
 
