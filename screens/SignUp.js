@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import GetStartedHeader from '../components/GetStartedHeader'; // Assuming this is the same header component
 
 const SignUp = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
@@ -28,6 +29,7 @@ const SignUp = ({ navigation }) => {
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.container}>
+        <GetStartedHeader />
         <View style={styles.signupCard}>
           <Text style={styles.headerText}>SIGN UP</Text>
 
@@ -69,16 +71,22 @@ const SignUp = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
 
+          <Text style={styles.socialMediaLabel}>or sign up with</Text>
           <View style={styles.socialMediaContainer}>
-            <Image source={require('../image/facebook.png')} style={styles.socialIcon} />
-            <Image source={require('../image/google.png')} style={styles.socialIcon} />
+            <TouchableOpacity>
+              <Image source={require('../image/facebook.png')} style={styles.socialIcon} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image source={require('../image/google.png')} style={styles.socialIcon} />
+            </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
 
-      <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.loginContainer}>
-        <Text style={styles.registerText}>Already have an account? <Text style={styles.loginLink}>LOGIN</Text></Text>
-      </TouchableOpacity>
+        {/* Move the login prompt under the signup card */}
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.loginContainer}>
+          <Text style={styles.registerText}>Already have an account? <Text style={styles.loginLink}>LOGIN</Text></Text>
+        </TouchableOpacity>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -86,54 +94,66 @@ const SignUp = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    paddingVertical: 20,
+    paddingTop: 30,
+    marginHorizontal: 30,
   },
   signupCard: {
-    width: '80%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    padding: 25,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
+    color: '#562c15',
   },
   input: {
     width: '100%',
-    height: 40,
-    marginBottom: 10,
+    height: 50,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: '#ddd',
-    padding: 10,
-    borderRadius: 5,
+    padding: 15,
+    borderRadius: 10,
   },
   button: {
-    backgroundColor: '#C39269',
-    paddingVertical: 10,
-    borderRadius: 20,
+    backgroundColor: '#562c15',
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginTop: 20,
     width: '100%',
-    alignItems: 'center',
-    marginBottom: 20,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  socialMediaLabel: {
+    fontSize: 16,
+    marginTop: 20,
+    marginBottom: 15,
+    color: '#6A5D43',
+    textAlign: 'center',
   },
   socialMediaContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    justifyContent: 'center',
+    marginBottom: 30,
   },
   socialIcon: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     resizeMode: 'contain',
+    marginHorizontal: 15,
   },
   loginContainer: {
     padding: 20,
@@ -141,9 +161,11 @@ const styles = StyleSheet.create({
   registerText: {
     fontSize: 16,
     textAlign: 'center',
+    
   },
   loginLink: {
     fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });
 

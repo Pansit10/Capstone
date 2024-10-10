@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
+import GetStartedHeader from '../components/GetStartedHeader';
+import { Ionicons } from '@expo/vector-icons'; 
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Static function to handle user login
   const handleLogin = () => {
@@ -20,12 +21,13 @@ const LoginScreen = ({ navigation }) => {
     setTimeout(() => {
       setLoading(false);
       alert('Login successful');
-      navigation.navigate('HomePage'); // Navigate to homepage after static login
-    }, 2000); // Simulate a delay for login
+      navigation.navigate('HomePage'); 
+    }, 2000); 
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <GetStartedHeader />
       <View style={styles.loginCard}>
         <Text style={styles.headerText}>LOG IN</Text>
         <Text style={styles.subHeaderText}>Sign in to your account</Text>
@@ -38,25 +40,23 @@ const LoginScreen = ({ navigation }) => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-
-        <View style={styles.rememberMeContainer}>
-          <BouncyCheckbox
-            size={25}
-            fillColor="#C39269"
-            unfillColor="#FFFFFF"
-            text="Remember me"
-            iconStyle={{ borderColor: "#C39269", borderRadius: 5 }}
-            textStyle={styles.rememberMeText}
-            isChecked={rememberMe}
-            onPress={() => setRememberMe(!rememberMe)}
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={!showPassword} 
+            value={password}
+            onChangeText={setPassword}
           />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+            <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="#4A4A4A" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.forgotPasswordContainer}>
+          <TouchableOpacity onPress={() => alert('Forgot Password functionality to be implemented')}>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity
@@ -88,23 +88,29 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
     paddingVertical: 30,
+    marginHorizontal: 25,
   },
   loginCard: {
-    width: '85%',
-    backgroundColor: '#fff',
-    padding: 25,
+    backgroundColor: '#FFFFFF',
+    padding: 20,
     borderRadius: 20,
-    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    marginTop: 20,
+    marginBottom: 20,
   },
   headerText: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#6A5D43',
+    color: '#562c15',
   },
   subHeaderText: {
     fontSize: 16,
@@ -120,43 +126,53 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
   },
-  rememberMeContainer: {
-    alignItems: 'flex-start',
-    marginBottom: 20,
-    width: '100%',
+  passwordContainer: {
+    position: 'relative',
   },
-  rememberMeText: {
-    fontSize: 16,
-    color: '#4A4A4A',
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    top: 12,
+  },
+  forgotPasswordContainer: {
+    marginBottom: 20,
+    alignItems: 'flex-end', 
+  },
+  forgotPasswordText: {
+    fontSize: 14,
+    color: '#562c15',
+    textDecorationLine: 'underline',
   },
   button: {
-    backgroundColor: '#C39269',
+    backgroundColor: '#562c15',
     paddingVertical: 15,
-    borderRadius: 15,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginTop: 20,
     width: '100%',
-    alignItems: 'center',
-    marginVertical: 20,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
   socialMediaLabel: {
     fontSize: 16,
+    marginTop: 50,
     marginBottom: 15,
     color: '#6A5D43',
+    textAlign: 'center',
   },
   socialMediaContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '40%',
+    justifyContent: 'center', 
     marginBottom: 30,
   },
   socialIcon: {
     width: 35,
     height: 35,
     resizeMode: 'contain',
+    marginHorizontal: 15, 
   },
   registerContainer: {
     marginTop: 20,
@@ -167,7 +183,7 @@ const styles = StyleSheet.create({
     color: '#4A4A4A',
   },
   registerLink: {
-    color: '#C39269',
+    color: '#562c15',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },

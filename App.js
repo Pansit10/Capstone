@@ -6,7 +6,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Importing Screens
-import GetStarted from './screens/GetStarted';
+import GetStarted1 from './screens/GetStarted1';
+import GetStarted2 from './screens/GetStarted2';
+import GetStarted3 from './screens/GetStarted3';
 import LoginScreen from './screens/LoginScreen';
 import SplashScreen from './screens/SplashScreen';
 import SignUp from './screens/SignUp';
@@ -51,7 +53,9 @@ export default function App() {
       >
         {/* Ensure all screens are correctly defined */}
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="GetStarted" component={GetStarted} />
+        <Stack.Screen name="GetStarted1" component={GetStarted1} />
+        <Stack.Screen name="GetStarted2" component={GetStarted2} />
+        <Stack.Screen name="GetStarted3" component={GetStarted3} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="VerificationScreen" component={VerificationScreen} />
