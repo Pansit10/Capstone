@@ -1,169 +1,245 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import GetStartedHeader from '../components/GetStartedHeader'; // Assuming this is the same header component
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+  Alert,
+  TextInput,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import SubmitButton from '../screens/components/SubmitButton';
 
 const SignUp = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false); // To show a loading state
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Static function to handle user registration
   const handleRegister = () => {
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      Alert.alert('Validation Error', 'Passwords do not match.');
       return;
     }
 
-    setLoading(true); // Start loading
-
+    setLoading(true);
     setTimeout(() => {
-      alert('Registration successful. Please log in.');
       setLoading(false);
-      // Navigate to the login page, passing the registered email
+      Alert.alert('Registration successful. Please log in.');
       navigation.navigate('LoginScreen', { registeredEmail: email });
-    }, 2000); // Simulate a delay for registration
+    }, 2000);
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <GetStartedHeader />
-        <View style={styles.signupCard}>
-          <Text style={styles.headerText}>SIGN UP</Text>
+    <SafeAreaView style={styles.safeArea}>
+      {/* Top Navbar */}
+      <View style={styles.navbar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back-outline" size={30} color="#333" />
+        </TouchableOpacity>
+        <Text style={styles.navTitle}>Create Account</Text>
+      </View>
 
+      {/* Content */}
+      <View style={styles.content}>
+        <Text style={styles.headerText}>Sign up to get started</Text>
+
+        {/* Full Name Input */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Full Name</Text>
           <TextInput
             style={styles.input}
-            placeholder="Full Name"
             value={fullName}
             onChangeText={setFullName}
+            placeholder="Enter your full name"
           />
-          
+        </View>
+
+        {/* Email Input */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
-            placeholder="Email"
             value={email}
             onChangeText={setEmail}
+            placeholder="Enter your email"
             keyboardType="email-address"
             autoCapitalize="none"
           />
+        </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
-
-          <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={loading}>
-            <Text style={styles.buttonText}>
-              {loading ? 'Registering...' : 'Register'}
-            </Text>
-          </TouchableOpacity>
-
-          <Text style={styles.socialMediaLabel}>or sign up with</Text>
-          <View style={styles.socialMediaContainer}>
-            <TouchableOpacity>
-              <Image source={require('../image/facebook.png')} style={styles.socialIcon} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image source={require('../image/google.png')} style={styles.socialIcon} />
+        {/* Password Input with Eye Icon */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Enter your password"
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={24}
+                color="#4A4A4A"
+              />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Move the login prompt under the signup card */}
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.loginContainer}>
-          <Text style={styles.registerText}>Already have an account? <Text style={styles.loginLink}>LOGIN</Text></Text>
+        {/* Confirm Password Input */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Confirm Password</Text>
+          <TextInput
+            style={styles.input}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholder="Confirm your password"
+            secureTextEntry
+          />
+        </View>
+
+        {/* Submit Button */}
+        <SubmitButton
+          label={loading ? 'Registering...' : 'Register'}
+          onPress={handleRegister}
+        />
+
+        {/* Social Media Sign Up */}
+        <Text style={styles.orText}>or sign up with</Text>
+        <View style={styles.socialMediaContainer}>
+          <TouchableOpacity style={styles.socialButton}>
+            <Image
+              source={require('../assets/image/facebook.png')}
+              style={styles.socialIcon}
+            />
+            <Text style={styles.socialButtonText}>Facebook</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.socialButton}>
+            <Image
+              source={require('../assets/image/google.png')}
+              style={styles.socialIcon}
+            />
+            <Text style={styles.socialButtonText}>Google</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Login Link */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate('LoginScreen')}
+          style={styles.loginContainer}
+        >
+          <Text style={styles.registerText}>
+            Already have an account? <Text style={styles.loginLink}>Login</Text>
+          </Text>
         </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    paddingTop: 30,
-    marginHorizontal: 30,
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F8F8F8',
+    paddingHorizontal: 50, // Margin on the sides
   },
-  signupCard: {
-    backgroundColor: '#FFFFFF',
-    padding: 25,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+  navbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  navTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    color: '#333',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    marginTop: 10, // Adjust spacing at the top
+    paddingHorizontal: 20,
   },
   headerText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#562c15',
+    fontSize: 25,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 5,
   },
   input: {
-    width: '100%',
-    height: 50,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    backgroundColor: '#F1F1F1',
+    borderRadius: 8,
     padding: 15,
-    borderRadius: 10,
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
   },
-  button: {
-    backgroundColor: '#562c15',
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginTop: 20,
-    width: '100%',
+  passwordContainer: {
+    position: 'relative',
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    top: '50%',
+    transform: [{ translateY: -12 }],
   },
-  socialMediaLabel: {
-    fontSize: 16,
-    marginTop: 20,
-    marginBottom: 15,
+  orText: {
+    fontSize: 14,
     color: '#6A5D43',
     textAlign: 'center',
+    marginVertical: 15,
   },
   socialMediaContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  socialButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F1F1',
+    padding: 15,
+    borderRadius: 15,
+    width: '48%',
     justifyContent: 'center',
-    marginBottom: 30,
   },
   socialIcon: {
-    width: 35,
-    height: 35,
+    width: 25,
+    height: 25,
     resizeMode: 'contain',
-    marginHorizontal: 15,
+    marginRight: 10,
+  },
+  socialButtonText: {
+    fontSize: 16,
+    color: '#333',
   },
   loginContainer: {
-    padding: 20,
+    marginTop: 10,
+    alignItems: 'center',
   },
   registerText: {
-    fontSize: 16,
-    textAlign: 'center',
-    
+    fontSize: 14,
+    color: '#333',
   },
   loginLink: {
+    color: '#6A5D43',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },

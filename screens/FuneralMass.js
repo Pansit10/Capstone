@@ -1,42 +1,70 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, ScrollView, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  SafeAreaView, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  TouchableOpacity, 
+  ScrollView, 
+  View 
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; // For chevron-back icon
 import { useNavigation } from '@react-navigation/native';
-import BottomNavbar from '../components/BottomNavbar';
+import SubmitButton from '../screens/components/SubmitButton';
 
 const FuneralMass = () => {
   const navigation = useNavigation();
 
+  // Navigate to the AppointmentForm with Funeral Mass specific requirements
+  const handleAppointmentNavigation = () => {
+    navigation.navigate('AppointmentForm', {
+      service: 'Funeral Mass',
+      requirements: [
+        'Baptismal Certificate',
+        'Death Certificate',
+      ],
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Navigation Header with Back Button */}
-      <View style={styles.navigationHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#6A5D43" />
+      {/* Top Navbar */}
+      <View style={styles.navbar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back-outline" size={30} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.navigationTitle}>Funeral Mass</Text>
+        <Text style={styles.navTitle}>Funeral Mass</Text>
       </View>
 
-      {/* Content Section */}
-      <ScrollView contentContainerStyle={styles.content}>
-        <Image source={require('../image/image7.png')} style={styles.image} />
+      {/* Scrollable Content Section */}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Image 
+          source={require('../assets/image/image7.png')} 
+          style={styles.image} 
+        />
 
-        <Text style={styles.requirementsTitle}>Requirements for Funeral Mass</Text>
-        
+        {/* Requirements Section */}
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Requirements for Funeral Mass</Text>
+
           <View style={styles.requirementsList}>
-            <Text style={styles.requirementItem}>• Baptismal Certificate</Text>
-            <Text style={styles.requirementItem}>• Death Certificate</Text>
+            {[
+              'Baptismal Certificate',
+              'Death Certificate',
+            ].map((item, index) => (
+              <Text key={index} style={styles.requirementItem}>
+                • {item}
+              </Text>
+            ))}
           </View>
         </View>
 
-        <TouchableOpacity style={styles.appointmentButton}>
-          <Text style={styles.appointmentButtonText}>Make an Appointment</Text>
-        </TouchableOpacity>
+        {/* Appointment Button */}
+        <SubmitButton 
+          label="Make an Appointment" 
+          onPress={handleAppointmentNavigation} 
+        />
       </ScrollView>
-
-      {/* Bottom Navbar */}
-      <BottomNavbar />
     </SafeAreaView>
   );
 };
@@ -44,69 +72,50 @@ const FuneralMass = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F8F8F8',
   },
-  navigationHeader: {
+  navbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    backgroundColor: '#F7F7F7',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    paddingHorizontal: 15,
+    paddingVertical: 20,
   },
-  backButton: {
-    marginRight: 10,
-  },
-  navigationTitle: {
-    fontSize: 20,
+  navTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#6A5D43',
+    color: '#333',
+    marginLeft: 10,
   },
-  content: {
-    paddingHorizontal: 20,
-    paddingBottom: 50,
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 100,
   },
   image: {
     width: '100%',
     height: 200,
     resizeMode: 'cover',
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 20,
-  },
-  requirementsTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    color: '#333',
   },
   section: {
-    backgroundColor: '#FDF3E7',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#6A5D43',
+    marginBottom: 10,
   },
   requirementsList: {
-    paddingHorizontal: 10,
+    marginTop: 10,
   },
   requirementItem: {
     fontSize: 16,
     color: '#333',
-    lineHeight: 28,
     marginBottom: 10,
-  },
-  appointmentButton: {
-    backgroundColor: '#C69C6D',
-    paddingVertical: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 50,
-  },
-  appointmentButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 

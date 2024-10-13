@@ -1,38 +1,92 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, ScrollView, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // For icons
+import { 
+  SafeAreaView, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  TouchableOpacity, 
+  ScrollView, 
+  View 
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import BottomNavbar from '../components/BottomNavbar';
-import AppointmentRequirements from '../components/AppointmentRequirements';
+import SubmitButton from '../screens/components/SubmitButton';
 
 const Baptism = () => {
   const navigation = useNavigation();
 
+  const handleAppointmentNavigation = () => {
+    navigation.navigate('AppointmentForm', {
+      service: 'Baptism',
+      requirements: [
+        'Birth certificate of Mother',
+        'Birth certificate of Father',
+        'Birth certificate of Child',
+        'Ninong/Ninang Confirmation',
+        'Marriage Certificate (if married)',
+      ],
+      items: [
+        'Candle (provided by parents)',
+        'Baptismal cloth (provided by church)',
+        'Video of tree planting (required by church)',
+      ],
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Navigation Header with Back Button */}
-      <View style={styles.navigationHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#6A5D43" />
+      {/* Top Navbar */}
+      <View style={styles.navbar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back-outline" size={30} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.navigationTitle}>Baptism</Text>
+        <Text style={styles.navTitle}>Baptism</Text>
       </View>
 
       {/* Content Section */}
-      <ScrollView contentContainerStyle={styles.content}>
-        <Image source={require('../image/image5.png')} style={styles.image} />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Image source={require('../assets/image/image5.png')} style={styles.image} />
 
-        <Text style={styles.requirementsTitle}>Requirements for Baptism</Text>
+        {/* Required Documents Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Documents Required for Baptism</Text>
+          <View style={styles.requirementsList}>
+            {[
+              'Birth certificate of Mother',
+              'Birth certificate of Father',
+              'Birth certificate of Child',
+              'Ninong/Ninang Confirmation',
+              'Marriage Certificate (if married)',
+            ].map((item, index) => (
+              <Text key={index} style={styles.requirementItem}>
+                • {item}
+              </Text>
+            ))}
+          </View>
+        </View>
 
-        <AppointmentRequirements />
+        {/* Items Needed Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Items Needed</Text>
+          <View style={styles.requirementsList}>
+            {[
+              'Candle (provided by parents)',
+              'Baptismal cloth (provided by church)',
+              'Video of tree planting (required by church)',
+            ].map((item, index) => (
+              <Text key={index} style={styles.requirementItem}>
+                • {item}
+              </Text>
+            ))}
+          </View>
+        </View>
 
-        <TouchableOpacity style={styles.appointmentButton}>
-          <Text style={styles.appointmentButtonText}>Make an Appointment</Text>
-        </TouchableOpacity>
+        {/* Appointment Button */}
+        <SubmitButton 
+          label="Make an Appointment" 
+          onPress={handleAppointmentNavigation} 
+        />
       </ScrollView>
-
-      {/* Bottom Navbar */}
-      <BottomNavbar />
     </SafeAreaView>
   );
 };
@@ -40,28 +94,23 @@ const Baptism = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F8F8F8',
   },
-  navigationHeader: {
+  navbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    backgroundColor: '#F7F7F7',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    paddingHorizontal: 15,
+    paddingVertical: 20,
   },
-  backButton: {
-    marginRight: 10,
-  },
-  navigationTitle: {
-    fontSize: 20,
+  navTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#6A5D43',
+    color: '#333',
+    marginLeft: 10,
   },
-  content: {
-    paddingHorizontal: 20,
-    paddingBottom: 50,
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 100,
   },
   image: {
     width: '100%',
@@ -69,26 +118,26 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderRadius: 10,
     marginBottom: 20,
-    marginTop: 20,
   },
-  requirementsTitle: {
+  section: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 15,
+  },
+  sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
     color: '#333',
+    marginBottom: 10,
   },
-  appointmentButton: {
-    backgroundColor: '#C69C6D',
-    paddingVertical: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 50,
+  requirementsList: {
+    marginTop: 10,
   },
-  appointmentButtonText: {
-    color: '#fff',
+  requirementItem: {
     fontSize: 16,
-    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
   },
 });
 

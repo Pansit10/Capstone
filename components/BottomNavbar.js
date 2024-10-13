@@ -1,6 +1,6 @@
 // BottomNavbar.js
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -9,7 +9,6 @@ const BottomNavbar = () => {
   const route = useRoute();
   const activeTab = route.name;
 
-  // Check if the current screen belongs to the appointment group
   const isAppointmentRelated = [
     'Appointment',
     'Baptism',
@@ -28,50 +27,61 @@ const BottomNavbar = () => {
   };
 
   return (
-    <View style={styles.navbar}>
-      {[
-        { name: 'HomePage', label: 'Home', icon: 'home-outline' },
-        { name: 'Appointment', label: 'Appointment', icon: 'add-circle-outline' },
-        { name: 'Calendar', label: 'Calendar', icon: 'calendar-outline' },
-        { name: 'Menu', label: 'Menu', icon: 'menu-outline' },
-      ].map((tab) => (
-        <TouchableOpacity key={tab.name} style={styles.navItem} onPress={() => handleNavigate(tab.name)}>
-          <Ionicons
-            name={tab.icon}
-            size={24}
-            color={
-              (tab.name === 'Appointment' && isAppointmentRelated) || activeTab === tab.name
-                ? '#6A5D43'
-                : '#666'
-            }
-          />
-          <Text
-            style={[
-              styles.navText,
-              ((tab.name === 'Appointment' && isAppointmentRelated) || activeTab === tab.name) && styles.activeTab,
-            ]}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.navbar}>
+        {[
+          { name: 'HomePage', label: 'Home', icon: 'home-outline' },
+          { name: 'Appointment', label: 'Appointment', icon: 'add-circle-outline' },
+          { name: 'Calendar', label: 'Calendar', icon: 'calendar-outline' },
+          { name: 'Profile', label: 'Profile', icon: 'person-outline' },
+        ].map((tab) => (
+          <TouchableOpacity
+            key={tab.name}
+            style={styles.navItem}
+            onPress={() => handleNavigate(tab.name)}
           >
-            {tab.label}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+            <Ionicons
+              name={tab.icon}
+              size={24}
+              color={
+                (tab.name === 'Appointment' && isAppointmentRelated) || activeTab === tab.name
+                  ? '#6A5D43'
+                  : '#666'
+              }
+            />
+            <Text
+              style={[
+                styles.navText,
+                ((tab.name === 'Appointment' && isAppointmentRelated) || activeTab === tab.name) &&
+                  styles.activeTab,
+              ]}
+            >
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: '#f8f8f8',
+  },
   navbar: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 0,
     left: 0,
     right: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#f8f8f8',
     paddingVertical: 15,
     borderTopWidth: 1,
     borderTopColor: '#ccc',
     elevation: 10,
+    zIndex: 100, // Ensure it stays on top
   },
   navItem: {
     alignItems: 'center',

@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const Header = () => (
   <View style={styles.header}>
-    <Image source={require('../image/logo.png')} style={styles.logo} />
+    <Image source={require('../assets/image/logo.png')} style={styles.logo} />
     <View style={styles.icons}>
       <Ionicons name="notifications-outline" size={28} color="#6A5D43" />
       <Ionicons name="person-circle-outline" size={28} color="#6A5D43" />

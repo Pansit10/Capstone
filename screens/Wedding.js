@@ -1,64 +1,86 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, ScrollView, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  SafeAreaView, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  ScrollView, 
+  View, 
+  TouchableOpacity 
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; // For chevron-back icon
 import { useNavigation } from '@react-navigation/native';
-import BottomNavbar from '../components/BottomNavbar';
+import SubmitButton from '../screens/components/SubmitButton'; // Import the SubmitButton component
 
 const Wedding = () => {
   const navigation = useNavigation();
 
-  // Navigate to the Appointment Booking Screen
+  // Navigate to the WeddingForm with service configuration
   const handleAppointmentNavigation = () => {
-    navigation.navigate('AppointmentBooking');
+    navigation.navigate('WeddingForm', {
+      service: 'Wedding',
+      requirements: [
+        'Baptismal Certificate',
+        'Birth Certificate',
+        'Confirmation Certificate',
+        'Marriage Bond',
+        'Seminar Pre-Cana',
+      ],
+    });
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Navigation Header with Back Button */}
-      <View style={styles.navigationHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#6A5D43" />
+      {/* Top Navbar */}
+      <View style={styles.navbar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back-outline" size={30} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.navigationTitle}>Wedding</Text>
+        <Text style={styles.navTitle}>Wedding</Text>
       </View>
 
       {/* Content Section */}
-      <ScrollView contentContainerStyle={styles.content}>
-        <Image source={require('../image/image4.png')} style={styles.image} />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Image source={require('../assets/image/image4.png')} style={styles.image} />
 
-        <Text style={styles.requirementsTitle}>Requirements for Bride and Groom</Text>
-        
-        {/* Seminar Pre-Cana Section */}
+        {/* Requirements Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Seminar Pre-Cana</Text>
-          <Text style={styles.description}>
-            If you don't have a Pre-Cana Seminar, you can schedule an appointment.
-          </Text>
+          <Text style={styles.sectionTitle}>Requirements for Bride and Groom</Text>
 
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Pre-Cana Appointment</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.subSection}>
+            <Text style={styles.subHeader}>Seminar Pre-Cana</Text>
+            <Text style={styles.description}>
+              If you haven't attended a Pre-Cana Seminar, you can schedule an appointment.
+            </Text>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Book Pre-Cana Appointment</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* Required Documents Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Required Documents</Text>
-          <View style={styles.requirementsList}>
-            <Text style={styles.requirementItem}>• Baptismal Certificate</Text>
-            <Text style={styles.requirementItem}>• Birth Certificate</Text>
-            <Text style={styles.requirementItem}>• Confirmation Certification</Text>
-            <Text style={styles.requirementItem}>• Marriage Bond</Text>
-            <Text style={styles.requirementItem}>• Seminar Pre-Cana</Text>
+          <View style={styles.subSection}>
+            <Text style={styles.subHeader}>Required Documents</Text>
+            <View style={styles.requirementsList}>
+              {[
+                'Baptismal Certificate',
+                'Birth Certificate',
+                'Confirmation Certificate',
+                'Marriage Bond',
+                'Seminar Pre-Cana',
+              ].map((item, index) => (
+                <Text key={index} style={styles.requirementItem}>
+                  • {item}
+                </Text>
+              ))}
+            </View>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.appointmentButton} onPress={handleAppointmentNavigation}>
-          <Text style={styles.appointmentButtonText}>Make an Appointment</Text>
-        </TouchableOpacity>
+        {/* Appointment Button */}
+        <SubmitButton 
+          label="Make an Appointment" 
+          onPress={handleAppointmentNavigation} 
+        />
       </ScrollView>
-
-      {/* Bottom Navbar */}
-      <BottomNavbar />
     </SafeAreaView>
   );
 };
@@ -66,28 +88,23 @@ const Wedding = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F8F8F8',
   },
-  navigationHeader: {
+  navbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    backgroundColor: '#F7F7F7',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    paddingHorizontal: 15,
+    paddingVertical: 20,
   },
-  backButton: {
-    marginRight: 10,
-  },
-  navigationTitle: {
-    fontSize: 20,
+  navTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#6A5D43',
+    color: '#333',
+    marginLeft: 10,
   },
-  content: {
-    paddingHorizontal: 20,
-    paddingBottom: 50,
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 100,
   },
   image: {
     width: '100%',
@@ -96,20 +113,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
   },
-  requirementsTitle: {
+  section: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 15,
+  },
+  sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
     color: '#333',
+    marginBottom: 10,
   },
-  section: {
-    backgroundColor: '#FAF2E7',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
+  subSection: {
+    marginTop: 10,
   },
-  sectionHeader: {
+  subHeader: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#6A5D43',
@@ -118,13 +137,12 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 20,
-    textAlign: 'center',
+    marginBottom: 10,
   },
   button: {
     backgroundColor: '#C69C6D',
     paddingVertical: 12,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -139,20 +157,7 @@ const styles = StyleSheet.create({
   requirementItem: {
     fontSize: 16,
     color: '#333',
-    lineHeight: 28,
     marginBottom: 10,
-  },
-  appointmentButton: {
-    backgroundColor: '#C69C6D',
-    paddingVertical: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 50,
-  },
-  appointmentButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 

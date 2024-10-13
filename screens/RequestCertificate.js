@@ -19,7 +19,7 @@ const RequestCertificate = () => {
 
       {/* Content Section */}
       <ScrollView contentContainerStyle={styles.content}>
-        <Image source={require('../image/image9.png')} style={styles.image} />
+        <Image source={require('../assets/image/image9.png')} style={styles.image} />
 
         <Text style={styles.requirementsTitle}>Requirements for Baptismal and Kumpil Certificate</Text>
         

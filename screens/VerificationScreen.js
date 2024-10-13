@@ -17,7 +17,7 @@ const VerificationScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../image/logo.png')} 
+        source={require('../assets/image/logo.png')} 
         style={styles.logo}
       />
       <Text style={styles.header}>Verification Code</Text>

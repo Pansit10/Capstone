@@ -19,7 +19,7 @@ const PrayerIntention = () => {
 
       {/* Content Section */}
       <ScrollView contentContainerStyle={styles.content}>
-        <Image source={require('../image/image6.png')} style={styles.image} />
+        <Image source={require('../assets/image/image6.png')} style={styles.image} />
 
         <Text style={styles.requirementsTitle}>Requirements for Prayer Intention</Text>
         

@@ -13,7 +13,7 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require('../image/splash_screen_bg.png')}
+      source={require('../assets/image/splash_screen_bg.png')}
       style={styles.background}
     >
       <View style={styles.container}>
@@ -22,7 +22,7 @@ const SplashScreen = ({ navigation }) => {
             animation="pulse"
             iterationCount="infinite"
             duration={2000}
-            source={require('../image/church_konek_logo.png')}
+            source={require('../assets/image/church_konek_logo.png')}
             style={styles.logo}
           />
         </TouchableOpacity>
@@ -30,7 +30,7 @@ const SplashScreen = ({ navigation }) => {
           animation="fadeInUp"
           duration={1500}
           delay={500}
-          source={require('../image/church_konek_text_logo.png')}
+          source={require('../assets/image/church_konek_text_logo.png')}
           style={styles.textLogo}
         />
       </View>

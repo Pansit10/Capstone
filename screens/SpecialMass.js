@@ -1,42 +1,61 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, ScrollView, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  SafeAreaView, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  TouchableOpacity, 
+  ScrollView, 
+  View 
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; 
 import { useNavigation } from '@react-navigation/native';
-import BottomNavbar from '../components/BottomNavbar';
+import SubmitButton from './components/SubmitButton';
 
 const SpecialMass = () => {
   const navigation = useNavigation();
 
+  // Navigate to the dynamic appointment form with the "Special Mass" service
+  const handleAppointmentNavigation = () => {
+    navigation.navigate('SpecialMassForm', {
+      service: 'Special Mass',
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Navigation Header with Back Button */}
-      <View style={styles.navigationHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#6A5D43" />
+      {/* Top Navbar */}
+      <View style={styles.navbar}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back-outline" size={30} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.navigationTitle}>Special Mass</Text>
+        <Text style={styles.navTitle}>Special Mass</Text>
       </View>
 
       {/* Content Section */}
-      <ScrollView contentContainerStyle={styles.content}>
-        <Image source={require('../image/image12.png')} style={styles.image} />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Image 
+          source={require('../assets/image/image12.png')} 
+          style={styles.image} 
+        />
 
-        <Text style={styles.requirementsTitle}>Requirements for Special Mass</Text>
-        
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Requirements for Special Mass</Text>
+
           <View style={styles.requirementsList}>
-            <Text style={styles.requirementItem}>• What is the mass for? (Death Anniversary, Wedding Anniversary, Birthday)</Text>
-            <Text style={styles.requirementItem}>• Appointment a Schedule</Text>
+            <Text style={styles.requirementItem}>
+              • What is the mass for? (Death Anniversary, Wedding Anniversary, Birthday)
+            </Text>
+            <Text style={styles.requirementItem}>• Schedule an appointment</Text>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.appointmentButton}>
-          <Text style={styles.appointmentButtonText}>Make a Special Mass</Text>
-        </TouchableOpacity>
+        {/* Appointment Button */}
+        <SubmitButton 
+          label="Make an Appointment" 
+          onPress={handleAppointmentNavigation} 
+        />
       </ScrollView>
-
-      {/* Bottom Navbar */}
-      <BottomNavbar />
     </SafeAreaView>
   );
 };
@@ -44,69 +63,51 @@ const SpecialMass = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F8F8F8',
   },
-  navigationHeader: {
+  navbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    backgroundColor: '#F7F7F7',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    paddingHorizontal: 15,
+    paddingVertical: 20,
   },
-  backButton: {
-    marginRight: 10,
-  },
-  navigationTitle: {
-    fontSize: 20,
+  navTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#6A5D43',
+    color: '#333',
+    marginLeft: 10,
   },
-  content: {
-    paddingHorizontal: 20,
+  scrollContent: {
+    padding: 20,
     paddingBottom: 50,
   },
   image: {
     width: '100%',
     height: 200,
     resizeMode: 'cover',
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 20,
-  },
-  requirementsTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    color: '#333',
   },
   section: {
-    backgroundColor: '#FDF3E7',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#6A5D43',
+    marginBottom: 10,
   },
   requirementsList: {
-    paddingHorizontal: 10,
+    marginTop: 10,
   },
   requirementItem: {
     fontSize: 16,
     color: '#333',
     lineHeight: 28,
-    marginBottom: 10,
-  },
-  appointmentButton: {
-    backgroundColor: '#C69C6D',
-    paddingVertical: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 50,
-  },
-  appointmentButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    marginBottom: 5,
   },
 });
 

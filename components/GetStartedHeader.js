@@ -5,7 +5,7 @@ import { View, Image, StyleSheet } from 'react-native';
 const GetStartedHeader = () => {
   return (
     <View style={styles.header}>
-      <Image source={require('../image/church_konek_logo2.png')} style={styles.logo} />
+      <Image source={require('../assets/image/church_konek_logo2.png')} style={styles.logo} />
     </View>
   );
 };
